@@ -77,6 +77,9 @@ describe 'CoffeeMix', ->
       expect(Extension.extended).to.have.been.called.once
       expect(extendedBy[0]).to.be.equal Acceptor
 
+    it "shouldn't extend target with an #extended property", ->
+      expect(Acceptor).to.have.not.property 'extended'
+
 
   describe ".include", ->
 
@@ -88,6 +91,9 @@ describe 'CoffeeMix', ->
     it "should pass constructor's prototype to mixin's #included", ->
       expect(Inclusion.included).to.have.been.called.once
       expect(includedBy[0]).to.be.equal Acceptor.prototype
+
+    it "shouldn't include #included property to target's prototype", ->
+      expect(Acceptor.prototype).to.have.not.property 'included'
 
 
   describe ".consern", ->
@@ -105,3 +111,6 @@ describe 'CoffeeMix', ->
     it "should pass constructor function to mixin's #conserned", ->
       expect(Consern.conserned).to.have.been.called.once
       expect(consernedBy[0]).to.be.equal Acceptor
+
+    it "shouldn't extend target with an #conserned property", ->
+      expect(Acceptor).to.have.not.property 'conserned'
