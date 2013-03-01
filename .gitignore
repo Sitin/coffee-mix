@@ -6,9 +6,23 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.tgz
 
 pids
 logs
 results
 
 npm-debug.log
+
+.idea
+.c9revisions
+.DS_Store
+
+node_modules
+
+lib
+test/*.test.js
+/index.js
+private.json
+
+/doc/

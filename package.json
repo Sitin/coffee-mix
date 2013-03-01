@@ -1,0 +1,42 @@
+{
+    "name":            "coffee-mix",
+    "description":     "Mixins support for CoffeeScript",
+    "version":         "0.0.1",
+    "keywords":        ["mixin", "coffee-script", "oop", "mixins", "concerns", "includes"],
+    "homepage":        "https://github.com/Sitin/coffee-mix",
+    "author":          "Mikhail Zyatin <mikhail.zyatin@gmail.com> (https://twitter.com/vivisjatin/)",
+    "repository":      {
+        "type": "git",
+        "url":  "http://github.com/Sitin/coffee-mix.git"
+    },
+    "engines":         {
+        "node": ">=0.8.14"
+    },
+    "scripts":         {
+        "start":      "node index",
+        "test":       "grunt test",
+        "prepublish": "grunt publish"
+    },
+    "dependencies":    {
+    },
+    "devDependencies": {
+        "lodash":              "~1.0.0",
+        "mocha":               "~1.8.0",
+        "codo":                "~1.5.6",
+        "grunt":               "~0.3.17",
+        "grunt-bg-shell":      "~1.0.2",
+        "grunt-coffee":        "~0.0.6",
+        "grunt-coffeelint":    "0.0.4",
+        "grunt-mocha-test":    "~0.1.1",
+        "grunt-contrib-clean": "~0.3.1",
+        "chai":                "~1.4.2",
+        "chai-spies":          "~0.5.1"
+    },
+    "readmeFilename":  "README.md",
+    "main":            "index.js",
+    "directories":     {
+        "test": "test",
+        "doc":  "doc"
+    },
+    "license":         "MIT"
+}
