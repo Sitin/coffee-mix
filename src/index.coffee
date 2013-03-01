@@ -1,7 +1,7 @@
 "use strict"
 
 
-class CoffeeMix
+CoffeeMix = require __dirname + '/CoffeeMix'
 
 
 module.exports = CoffeeMix
