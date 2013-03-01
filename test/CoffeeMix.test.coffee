@@ -26,7 +26,7 @@ Inclusion =
   inclusion: -> @
   included: chai.spy -> includedBy.push @
 
-# Instance and class mixin
+# Class and instance mixin
 consernedBy = []
 Consern =
   classProperties:

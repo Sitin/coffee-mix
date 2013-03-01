@@ -27,7 +27,7 @@ moduleKeywords = ['extended', 'included']
 #  # prototype context
 #  included: ->
 #
-## Instance and prototype mixin
+## Class and instance mixin
 #Consern =
 #  classProperties:
 #    classConsern: -> @
