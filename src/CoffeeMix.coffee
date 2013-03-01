@@ -6,8 +6,8 @@ moduleKeywords = ['extended', 'included']
 
 class CoffeeMix
   # Properties helpers
-  get = (props) => @::__defineGetter__ name, getter for name, getter of props
-  set = (props) => @::__defineSetter__ name, setter for name, setter of props
+  @get: (props) => @::__defineGetter__ name, getter for name, getter of props
+  @set: (props) => @::__defineSetter__ name, setter for name, setter of props
 
   @extend: (obj) ->
     for key, value of obj when key not in moduleKeywords
