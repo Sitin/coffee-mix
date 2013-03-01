@@ -14,11 +14,8 @@ CoffeeMix = require '../lib/CoffeeMix'
 
 
 class Acceptor extends CoffeeMix
-  get = @get
-  set = @set
-
-  get property: -> @_property
-  set property: (property) -> @_property = property
+  @get property: -> @_property
+  @set property: (property) -> @_property = property
 
 
 describe 'CoffeeMix', ->
