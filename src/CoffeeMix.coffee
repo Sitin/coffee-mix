@@ -1,7 +1,7 @@
 "use strict"
 
 
-moduleKeywords = ['extended', 'included']
+forbiddenKeys = ['extended', 'included', 'connected']
 
 
 #
@@ -10,7 +10,7 @@ moduleKeywords = ['extended', 'included']
 # Usage
 # ------
 #
-# Extend this class and call it's static helpers as shown below.
+# Extend this class and call it's static and dynamic helpers as shown below.
 #
 # ```coffeescript
 ## Class mixin
@@ -34,7 +34,17 @@ moduleKeywords = ['extended', 'included']
 #  instanceProperties:
 #    instanceConsern: -> @
 #  # Will be invoked in class context
-#  conserned: -> #
+#  conserned: ->
+#
+## Connectable mixin
+#Connection =
+#  # This property will be attached
+#  # via setter and getter
+#  connectionMember: "connector's member"
+#  # Will be called in mixin context
+#  connectionMethod: ->
+#  # Will be invoked in instance context
+#  connected: ->
 #
 #
 #class Acceptor extends CoffeeMix
@@ -44,6 +54,9 @@ moduleKeywords = ['extended', 'included']
 #  @include Inclusion
 #  @extend Extension
 #  @consern Consern
+#
+#  constructor: (connection) ->
+#    @$connect connection
 # ```
 #
 class CoffeeMix
@@ -80,7 +93,7 @@ class CoffeeMix
   #     function context. This property won't be added.
   #
   @extend: (obj) ->
-    for key, value of obj when key not in moduleKeywords
+    for key, value of obj when key not in forbiddenKeys
       # Assign properties to constructor function
       @[key] = value
 
@@ -100,7 +113,7 @@ class CoffeeMix
   #     constructor's prototype context. This property won't be added.
   #
   @include: (obj) ->
-    for key, value of obj when key not in moduleKeywords
+    for key, value of obj when key not in forbiddenKeys
       # Assign properties to the prototype
       @::[key] = value
 
@@ -128,6 +141,34 @@ class CoffeeMix
     @include obj.instanceProperties
 
     obj.conserned?.apply @
+    @
+
+  #
+  # Connects mixin to current instance.
+  #
+  # This method extends instance with bounded versions of the passed mixin
+  # methods and creates getter and setter for mixin members.
+  #
+  # If the mixin has a `connected` method then it will be ivoked in the
+  # current context.
+  #
+  # @param obj [Object] mixin object
+  # @option obj [Function] connected method that will be invoked in current
+  #     context. This property won't be added.
+  #
+  $connect: (obj) ->
+    ctx = @
+
+    for key, value of obj when key not in forbiddenKeys
+      if typeof value is 'function'
+        @[key] = do (value) -> ->
+          value.apply obj, arguments
+      else
+        do (key) ->
+          ctx.__defineGetter__ key, -> obj[key]
+          ctx.__defineSetter__ key, (param) -> obj[key] = param
+
+    obj.connected?.apply @
     @
 
 

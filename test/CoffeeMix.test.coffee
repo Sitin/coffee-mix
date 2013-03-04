@@ -35,6 +35,13 @@ Consern =
     instanceConsern: -> @
   conserned: chai.spy -> consernedBy.push @
 
+# Coonnection
+connectedBy = []
+Connection =
+  member: "connector's member"
+  connection: -> @
+  connected: chai.spy -> connectedBy.push @
+
 
 class Acceptor extends CoffeeMix
   @get property: -> @_property
@@ -43,6 +50,9 @@ class Acceptor extends CoffeeMix
   @include Inclusion
   @extend Extension
   @consern Consern
+
+  connect: ->
+    @$connect Connection
 
 
 describe 'CoffeeMix', ->
@@ -112,5 +122,33 @@ describe 'CoffeeMix', ->
       expect(Consern.conserned).to.have.been.called.once
       expect(consernedBy[0]).to.be.equal Acceptor
 
-    it "shouldn't extend target with an #conserned property", ->
+    it "shouldn't extend target with a #conserned property", ->
       expect(Acceptor).to.have.not.property 'conserned'
+
+
+  describe "#$connect", ->
+    acceptor = new Acceptor
+    do acceptor.connect
+
+    it "should provide mixin connection support", ->
+      expect(acceptor).to.respondTo 'connection'
+      expect(do acceptor.connection).to.be.equal Connection
+
+    it "should create setters and getters for mixin members", ->
+      expect(acceptor).to.have.property 'member'
+      expect(acceptor.__lookupGetter__ 'member').to.be.a 'function'
+      expect(acceptor.__lookupSetter__ 'member').to.be.a 'function'
+
+      expect(acceptor.member).to.be.deep.equal Connection.member
+
+      backup = Connection.member
+      acceptor.member = 'new value'
+      expect(Connection.member).to.be.equal 'new value'
+      Connection.member = backup
+
+    it "should pass constructor function to mixin's #connected", ->
+      expect(Connection.connected).to.have.been.called.once
+      expect(connectedBy[0]).to.be.equal acceptor
+
+    it "shouldn't extend target with an #connected property", ->
+      expect(acceptor).to.have.not.property 'connected'
