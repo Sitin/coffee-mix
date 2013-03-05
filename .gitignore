@@ -26,3 +26,5 @@ test/*.test.js
 private.json
 
 /doc/
+
+*~
