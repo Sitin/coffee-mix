@@ -5,6 +5,9 @@ forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 
 
 #
+# @author [Mikhail Zyatin](https://twitter.com/vivisjatin/) <mikhail.zyatin@gmail.com>
+# @copyright 2013 Mikhail Zyatin
+#
 # Implements mixin and property helpers.
 #
 # Usage
@@ -95,6 +98,9 @@ class CoffeeMix
   # If the mixin has an `extended` method then it will be ivoked in the
   # constructor function context.
   #
+  # @note Although this method looks suitable for extending dedicated
+  #     instances we recommend to use {#$integrate} for this task.
+  #
   # @param obj [Object] mixin object
   # @option obj [Function] extended method that will be invoked in constructor
   #     function context. This property won't be added.
@@ -163,6 +169,8 @@ class CoffeeMix
   # @option obj [Function] integrated method that will be invoked in caller's
   #     context. This property won't be added.
   #
+  # @since 0.0.3
+  #
   $integrate: (obj) ->
     for key, value of obj when key not in forbiddenKeys
       # Assign properties to instance object
@@ -184,6 +192,8 @@ class CoffeeMix
   # @option obj [Function] attached method that will be invoked in mixin
   #     context with current context as a parameter. This property won't be
   #     added.
+  #
+  # @since 0.0.3
   #
   $attach: (obj) ->
     ctx = @
