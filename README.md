@@ -74,6 +74,10 @@ class Acceptor extends CoffeeMix
     @$integrate integration
 ```
 
+Documentation
+---------
+You can find API docs [here](http://coffeedoc.info/github/Sitin/coffee-mix/master/).
+
 License
 --------
 (The MIT License)
