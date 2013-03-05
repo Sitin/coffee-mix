@@ -36,11 +36,17 @@ Consern =
   conserned: chai.spy -> consernedBy.push @
 
 # Coonnection
-connectedBy = []
-Connection =
-  member: "connector's member"
-  connection: -> @
-  connected: chai.spy -> connectedBy.push @
+attachedBy = []
+Attachment =
+  member: "attachment's member"
+  attachment: -> @
+  attached: chai.spy (acceptor) -> attachedBy.push [@, acceptor]
+
+# Integration
+integratedBy = []
+Integration =
+  integration: -> @
+  integrated: chai.spy -> integratedBy.push @
 
 
 class Acceptor extends CoffeeMix
@@ -51,8 +57,11 @@ class Acceptor extends CoffeeMix
   @extend Extension
   @consern Consern
 
-  connect: ->
-    @$connect Connection
+  attach: ->
+    @$attach Attachment
+
+  integrate: ->
+    @$integrate Integration
 
 
 describe 'CoffeeMix', ->
@@ -83,7 +92,7 @@ describe 'CoffeeMix', ->
       expect(Acceptor.extension).to.be.a 'function'
       expect(do Acceptor.extension).to.be.equal Acceptor
 
-    it "should pass constructor function to mixin's #extended", ->
+    it "should call mixin's #extended in constructor function context", ->
       expect(Extension.extended).to.have.been.called.once
       expect(extendedBy[0]).to.be.equal Acceptor
 
@@ -98,7 +107,7 @@ describe 'CoffeeMix', ->
       expect(acceptor).to.respondTo 'inclusion'
       expect(do acceptor.inclusion).to.be.equal acceptor
 
-    it "should pass constructor's prototype to mixin's #included", ->
+    it "should call mixin's #included in constructor's prototype context", ->
       expect(Inclusion.included).to.have.been.called.once
       expect(includedBy[0]).to.be.equal Acceptor.prototype
 
@@ -118,7 +127,7 @@ describe 'CoffeeMix', ->
       expect(acceptor).to.respondTo 'instanceConsern'
       expect(do acceptor.instanceConsern).to.be.equal acceptor
 
-    it "should pass constructor function to mixin's #conserned", ->
+    it "should call mixin's #conserned in constructor function context", ->
       expect(Consern.conserned).to.have.been.called.once
       expect(consernedBy[0]).to.be.equal Acceptor
 
@@ -126,29 +135,48 @@ describe 'CoffeeMix', ->
       expect(Acceptor).to.have.not.property 'conserned'
 
 
-  describe "#$connect", ->
+  describe "#integrate", ->
     acceptor = new Acceptor
-    do acceptor.connect
+    do acceptor.integrate
 
-    it "should provide mixin connection support", ->
-      expect(acceptor).to.respondTo 'connection'
-      expect(do acceptor.connection).to.be.equal Connection
+    it "should provide object mixins support", ->
+      expect(acceptor).to.have.property 'integration'
+      expect(acceptor.integration).to.be.a 'function'
+      expect(do acceptor.integration).to.be.equal acceptor
+
+    it "should call mixin's #integrated in constructor function context", ->
+      expect(Integration.integrated).to.have.been.called.once
+      expect(integratedBy[0]).to.be.equal acceptor
+
+    it "shouldn't extend target with an #extended property", ->
+      expect(acceptor).to.have.not.property 'integrated'
+
+
+  describe "#$attach", ->
+    acceptor = new Acceptor
+    do acceptor.attach
+
+    it "should provide mixin attachment support", ->
+      expect(acceptor).to.respondTo 'attachment'
+      expect(do acceptor.attachment).to.be.equal Attachment
 
     it "should create setters and getters for mixin members", ->
       expect(acceptor).to.have.property 'member'
       expect(acceptor.__lookupGetter__ 'member').to.be.a 'function'
       expect(acceptor.__lookupSetter__ 'member').to.be.a 'function'
 
-      expect(acceptor.member).to.be.deep.equal Connection.member
+      expect(acceptor.member).to.be.deep.equal Attachment.member
 
-      backup = Connection.member
+      backup = Attachment.member
       acceptor.member = 'new value'
-      expect(Connection.member).to.be.equal 'new value'
-      Connection.member = backup
+      expect(Attachment.member).to.be.equal 'new value'
+      Attachment.member = backup
 
-    it "should pass constructor function to mixin's #connected", ->
-      expect(Connection.connected).to.have.been.called.once
-      expect(connectedBy[0]).to.be.equal acceptor
+    it "should call mixin's #connected in mixin context passin constructor " +
+    "function context as a parameter", ->
+      expect(Attachment.attached).to.have.been.called.once
+      expect(attachedBy[0][0]).to.be.equal Attachment
+      expect(attachedBy[0][1]).to.be.equal acceptor
 
-    it "shouldn't extend target with an #connected property", ->
-      expect(acceptor).to.have.not.property 'connected'
+    it "shouldn't extend target with an #attached property", ->
+      expect(acceptor).to.have.not.property 'attached'

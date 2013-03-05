@@ -1,7 +1,7 @@
 "use strict"
 
 
-forbiddenKeys = ['extended', 'included', 'connected']
+forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 
 
 #
@@ -36,15 +36,22 @@ forbiddenKeys = ['extended', 'included', 'connected']
 #  # Will be invoked in class context
 #  conserned: ->
 #
-## Connectable mixin
-#Connection =
+## Object mixin
+#Integration =
+#  objectMethod: ->
+#  # Method that will be invoked
+#  # in instance context
+#  integrated: ->
+#
+## Attachable mixin
+#Attachment =
 #  # This property will be attached
 #  # via setter and getter
-#  connectionMember: "connector's member"
+#  attachmentMember: "attachment's member"
 #  # Will be called in mixin context
-#  connectionMethod: ->
+#  attachmentMethod: ->
 #  # Will be invoked in instance context
-#  connected: ->
+#  attached: (acceptor) ->
 #
 #
 #class Acceptor extends CoffeeMix
@@ -56,7 +63,7 @@ forbiddenKeys = ['extended', 'included', 'connected']
 #  @consern Consern
 #
 #  constructor: (connection) ->
-#    @$connect connection
+#    @$attach attachment
 # ```
 #
 class CoffeeMix
@@ -144,31 +151,55 @@ class CoffeeMix
     @
 
   #
-  # Connects mixin to current instance.
+  # Adds object-level mixin.
+  #
+  # This method is a "dynamic" version of the {.extend} method.
+  # It extends current context with passed mixin.
+  #
+  # If the mixin has an `extended` method then it will be ivoked in the
+  # caller's context.
+  #
+  # @param obj [Object] mixin object
+  # @option obj [Function] integrated method that will be invoked in caller's
+  #     context. This property won't be added.
+  #
+  $integrate: (obj) ->
+    for key, value of obj when key not in forbiddenKeys
+      # Assign properties to instance object
+      @[key] = value
+
+    obj.integrated?.apply @
+    @
+
+  #
+  # Attaches mixin to current instance.
   #
   # This method extends instance with bounded versions of the passed mixin
   # methods and creates getter and setter for mixin members.
   #
-  # If the mixin has a `connected` method then it will be ivoked in the
+  # If the mixin has a `attached` method then it will be ivoked in the
   # current context.
   #
   # @param obj [Object] mixin object
-  # @option obj [Function] connected method that will be invoked in current
-  #     context. This property won't be added.
+  # @option obj [Function] attached method that will be invoked in mixin
+  #     context with current context as a parameter. This property won't be
+  #     added.
   #
-  $connect: (obj) ->
+  $attach: (obj) ->
     ctx = @
 
     for key, value of obj when key not in forbiddenKeys
+      # Add bounded to mixin method versions
       if typeof value is 'function'
         @[key] = do (value) -> ->
           value.apply obj, arguments
+      # Create getters and setters for mixin members
       else
         do (key) ->
           ctx.__defineGetter__ key, -> obj[key]
           ctx.__defineSetter__ key, (param) -> obj[key] = param
 
-    obj.connected?.apply @
+    obj.attached? @
     @
 
 

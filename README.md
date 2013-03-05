@@ -43,15 +43,22 @@ Consern =
   # Will be invoked in class context
   conserned: ->
 
-# Connectable mixin
-Connection =
+# Object mixin
+Integration =
+  objectMethod: ->
+  # Method that will be invoked
+  # in instance context
+  integrated: ->
+
+# Attachable mixin
+Attachment =
   # This property will be attached
   # via setter and getter
-  connectionMember: "connector's member"
+  attachmentMember: "attachment's member"
   # Will be called in mixin context
-  connectionMethod: ->
+  attachmentMethod: ->
   # Will be invoked in instance context
-  connected: ->
+  attached: (acceptor) ->
 
 
 class Acceptor extends CoffeeMix
@@ -62,8 +69,9 @@ class Acceptor extends CoffeeMix
   @extend Extension
   @consern Consern
 
-  constructor: (connection) ->
-    @$connect connection
+  constructor: (attachment, integration) ->
+    @$attach attachment
+    @$integrate integration
 ```
 
 License
