@@ -40,10 +40,19 @@ module.exports = (grunt) ->
       options:
         reporter: 'spec'
 
-    watch: [
-      files: [options.coffeePath + '/**/*.coffee', './*.coffee']
-      tasks: 'default'
-    ]
+    watch:
+      gruntfile:
+        files: 'Gruntfile.*'
+        tasks: ['compile', 'test']
+      sources:
+        files: [options.coffeePath + '/**/*.coffee', 'index.coffee']
+        tasks: ['compile:main', 'compile:index', 'test']
+      tests:
+        files: [options.testPath + '**/*.coffee']
+        tasks: ['compile:tests', 'test']
+      testStuff:
+        files: [options.testPath + 'responses/*']
+        tasks: ['test']
 
     clean:
       build: [
@@ -75,6 +84,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-mocha-test'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-bg-shell'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-notify'
 
   # Documentation task.
   grunt.registerTask 'codo', ['bgShell:codo']
