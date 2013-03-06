@@ -9,7 +9,7 @@ module.exports = (grunt) ->
 
   # Project configuration
   grunt.initConfig
-    pkg: '<json:package.json>'
+    pkg: grunt.file.readJSON 'package.json'
 
     coffeelint:
       main:
@@ -29,6 +29,9 @@ module.exports = (grunt) ->
       index:
         files:
           'index.js': 'index.coffee'
+      client:
+        files:
+          'client.js': 'client.coffee'
       tests:
         expand:  yes
         src: options.testPath + '/**/*.coffee'
@@ -43,13 +46,13 @@ module.exports = (grunt) ->
     watch:
       gruntfile:
         files: 'Gruntfile.*'
-        tasks: ['compile', 'test']
+        tasks: ['compile', 'test', 'browserify']
       sources:
-        files: [options.coffeePath + '/**/*.coffee', 'index.coffee']
-        tasks: ['compile:main', 'compile:index', 'test']
+        files: [options.coffeePath + '/**/*.coffee', 'index.coffee', 'client.coffee']
+        tasks: ['compile', 'test', 'browserify']
       tests:
         files: [options.testPath + '**/*.coffee']
-        tasks: ['compile:tests', 'test']
+        tasks: ['coffee:tests', 'test']
       testStuff:
         files: [options.testPath + 'responses/*']
         tasks: ['test']
@@ -58,26 +61,40 @@ module.exports = (grunt) ->
       build: [
         "doc"
         "lib"
+        "client"
         "test/**/*.test.js"
         "index.js"
       ]
       tests: "test/**/*.test.js"
+      browserified: "coffee-mix.*"
 
     bgShell:
       run:
         cmd: 'node index.js'
-        stdout: true
-        stderr: true
-        bg: false
-        fail: false
+        stdout: yes
+        stderr: yes
+        bg: no
+        fail: no
         done: (err, stdout, stderr) ->
       codo:
         cmd: 'node_modules/.bin/codo'
         stdout: yes
         stderr: yes
         bg: no
-        fail: no
+        fail: yes
         done: (err, stdout, stderr) ->
+      browserify:
+        cmd: "node_modules/.bin/browserify client.js -o coffee-mix.<%= pkg.version %>.js"
+        stdout: yes
+        stderr: yes
+        bg: no
+        fail: yes
+
+    copy:
+      browserified:
+        expand: yes
+        src: 'coffee-mix.*'
+        dest: 'client'
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-coffeelint'
@@ -86,6 +103,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-bg-shell'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-notify'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
+
+  # Browserification task.
+  grunt.registerTask 'browserify', ['bgShell:browserify', 'copy:browserified', 'clean:browserified']
 
   # Documentation task.
   grunt.registerTask 'codo', ['bgShell:codo']
@@ -97,7 +118,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'compile', ['coffeelint', 'coffee']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'compile', 'test', 'codo']
+  grunt.registerTask 'default', ['clean', 'compile', 'test', 'browserify', 'codo']
 
   # Publishing task.
   grunt.registerTask 'publish', ['default']

@@ -20,9 +20,10 @@ npm-debug.log
 
 node_modules
 
-lib
+lib/
+client/
 test/*.test.js
-/index.js
+/*.js
 private.json
 
 /doc/
