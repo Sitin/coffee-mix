@@ -62,6 +62,11 @@ Attachment =
 
 
 class Acceptor extends CoffeeMix
+  # Bind property helpers to current class
+  get = => @get arguments...
+  set = => @set arguments...
+
+  # Define properties
   @get property: -> @_property
   @set property: (property) -> @_property = property
 

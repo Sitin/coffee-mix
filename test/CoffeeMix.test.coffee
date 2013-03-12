@@ -50,8 +50,11 @@ Integration =
 
 
 class Acceptor extends CoffeeMix
-  @get property: -> @_property
-  @set property: (property) -> @_property = property
+  get = => @get arguments...
+  set = => @set arguments...
+
+  get property: -> @_property
+  set property: (property) -> @_property = property
 
   @include Inclusion
   @extend Extension
@@ -80,9 +83,9 @@ describe 'CoffeeMix', ->
       spam.property = 'Spam'
 
       expect(eggs).to.have.ownProperty '_property', 'Eggs'
-      expect(eggs).to.have.property 'property', 'Eggs'
+      expect(Acceptor.prototype).to.have.ownProperty 'property', 'Eggs'
       expect(spam).to.have.ownProperty '_property', 'Spam'
-      expect(spam).to.have.property 'property', 'Spam'
+      expect(Acceptor.prototype).to.have.ownProperty 'property', 'Spam'
 
 
   describe ".extend", ->

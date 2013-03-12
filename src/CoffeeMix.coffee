@@ -58,15 +58,21 @@ forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 #
 #
 #class Acceptor extends CoffeeMix
-#  @get property: -> @_property
-#  @set property: (property) -> @_property = property
+#  # Bind property helpers to current class
+#  get = => @get arguments...
+#  set = => @set arguments...
+#
+#  # Define properties
+#  get property: -> @_property
+#  set property: (property) -> @_property = property
 #
 #  @include Inclusion
 #  @extend Extension
 #  @consern Consern
 #
-#  constructor: (connection) ->
+#  constructor: (attachment, integration) ->
 #    @$attach attachment
+#    @$integrate integration
 # ```
 #
 class CoffeeMix
@@ -78,7 +84,7 @@ class CoffeeMix
   #
   # @param props [Object] a hash of the propety getters
   #
-  @get: (props) => @::__defineGetter__ name, getter for name, getter of props
+  @get: (props) -> @::__defineGetter__ name, getter for name, getter of props
 
   #
   # Helper that creates property setters.
@@ -88,7 +94,7 @@ class CoffeeMix
   #
   # @param props [Object] a hash of the propety setters
   #
-  @set: (props) => @::__defineSetter__ name, setter for name, setter of props
+  @set: (props) -> @::__defineSetter__ name, setter for name, setter of props
 
   #
   # Adds class-level mixin.
