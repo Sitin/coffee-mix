@@ -1,7 +1,7 @@
 {
     "name":            "coffee-mix",
     "description":     "Mixins support for CoffeeScript",
-    "version":         "0.0.5",
+    "version":         "0.0.6",
     "keywords":        ["mixin", "coffee-script", "oop", "mixins", "concerns", "includes", "codo"],
     "homepage":        "https://github.com/Sitin/coffee-mix",
     "author":          "Mikhail Zyatin <mikhail.zyatin@gmail.com> (https://twitter.com/vivisjatin/)",
