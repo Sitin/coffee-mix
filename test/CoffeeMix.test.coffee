@@ -79,9 +79,9 @@ describe 'CoffeeMix', ->
       eggs.property = 'Eggs'
       spam.property = 'Spam'
 
-      expect(eggs).to.have.property '_property', 'Eggs'
+      expect(eggs).to.have.ownProperty '_property', 'Eggs'
       expect(eggs).to.have.property 'property', 'Eggs'
-      expect(spam).to.have.property '_property', 'Spam'
+      expect(spam).to.have.ownProperty '_property', 'Spam'
       expect(spam).to.have.property 'property', 'Spam'
 
 
