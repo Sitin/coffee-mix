@@ -62,9 +62,13 @@ module.exports = (grunt) ->
         "doc"
         "lib"
         "client"
-        "test/**/*.test.js"
         "index.js"
       ]
+      garbage: [
+        "client.js"
+        "Gruntfile.js"
+      ]
+      src: "src/**/*.js"
       tests: "test/**/*.test.js"
       browserified: "coffee-mix.*"
 
@@ -108,6 +112,9 @@ module.exports = (grunt) ->
   # Browserification task.
   grunt.registerTask 'browserify', ['bgShell:browserify', 'copy:browserified', 'clean:browserified']
 
+  # Build cleanup task
+  grunt.registerTask 'cleanup', ['clean:garbage']
+
   # Documentation task.
   grunt.registerTask 'codo', ['bgShell:codo']
 
@@ -118,7 +125,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'compile', ['coffeelint', 'coffee']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'compile', 'test', 'browserify', 'codo']
+  grunt.registerTask 'default', ['clean', 'compile', 'test', 'browserify', 'cleanup', 'codo']
 
   # Publishing task.
   grunt.registerTask 'publish', ['default']

@@ -5,9 +5,6 @@ forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 
 
 #
-# @author [Mikhail Zyatin](https://twitter.com/vivisjatin/) <mikhail.zyatin@gmail.com>
-# @copyright 2013 Mikhail Zyatin
-#
 # Implements mixin and property helpers.
 #
 # Usage
@@ -74,6 +71,9 @@ forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 #    @$attach attachment
 #    @$integrate integration
 # ```
+#
+# @author [Mikhail Zyatin](https://twitter.com/vivisjatin/) <mikhail.zyatin@gmail.com>
+# @copyright 2013 Mikhail Zyatin
 #
 class CoffeeMix
   #
