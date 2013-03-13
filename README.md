@@ -70,13 +70,13 @@ class Acceptor extends CoffeeMix
   @get property: -> @_property
   @set property: (property) -> @_property = property
 
-  @include Inclusion
-  @extend Extension
-  @consern Consern
+  @include Inclusion, 'Inclusion options'
+  @extend Extension, 'Extension options'
+  @consern Consern, 'Consern options'
 
   constructor: (attachment, integration) ->
-    @$attach attachment
-    @$integrate integration
+    @$attach attachment, 'Attachment options'
+    @$integrate integration, 'Integration options'
 ```
 
 Documentation

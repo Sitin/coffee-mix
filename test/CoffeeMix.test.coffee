@@ -56,15 +56,15 @@ class Acceptor extends CoffeeMix
   get property: -> @_property
   set property: (property) -> @_property = property
 
-  @include Inclusion
-  @extend Extension
-  @consern Consern
+  @include Inclusion, 'Inclusion options'
+  @extend Extension, 'Extension options'
+  @consern Consern, 'Consern options'
 
   attach: ->
-    @$attach Attachment
+    @$attach Attachment, 'Attachment options'
 
   integrate: ->
-    @$integrate Integration
+    @$integrate Integration, 'Integration options'
 
 
 describe 'CoffeeMix', ->
@@ -97,6 +97,8 @@ describe 'CoffeeMix', ->
 
     it "should call mixin's #extended in constructor function context", ->
       expect(Extension.extended).to.have.been.called.once
+      expect(Extension.extended)
+        .to.have.been.called['with'] 'Extension options'
       expect(extendedBy[0]).to.be.equal Acceptor
 
     it "shouldn't extend target with an #extended property", ->
@@ -112,6 +114,8 @@ describe 'CoffeeMix', ->
 
     it "should call mixin's #included in constructor's prototype context", ->
       expect(Inclusion.included).to.have.been.called.once
+      expect(Inclusion.included)
+        .to.have.been.called['with'] 'Inclusion options'
       expect(includedBy[0]).to.be.equal Acceptor.prototype
 
     it "shouldn't include #included property to target's prototype", ->
@@ -132,6 +136,8 @@ describe 'CoffeeMix', ->
 
     it "should call mixin's #conserned in constructor function context", ->
       expect(Consern.conserned).to.have.been.called.once
+      expect(Consern.conserned)
+        .to.have.been.called['with'] 'Consern options'
       expect(consernedBy[0]).to.be.equal Acceptor
 
     it "shouldn't extend target with a #conserned property", ->
@@ -149,6 +155,8 @@ describe 'CoffeeMix', ->
 
     it "should call mixin's #integrated in constructor function context", ->
       expect(Integration.integrated).to.have.been.called.once
+      expect(Integration.integrated)
+        .to.have.been.called['with'] 'Integration options'
       expect(integratedBy[0]).to.be.equal acceptor
 
     it "shouldn't extend target with an #extended property", ->
@@ -178,6 +186,8 @@ describe 'CoffeeMix', ->
     it "should call mixin's #connected in mixin context passin constructor " +
     "function context as a parameter", ->
       expect(Attachment.attached).to.have.been.called.once
+      expect(Attachment.attached)
+        .to.have.been.called['with'] acceptor, 'Attachment options'
       expect(attachedBy[0][0]).to.be.equal Attachment
       expect(attachedBy[0][1]).to.be.equal acceptor
 

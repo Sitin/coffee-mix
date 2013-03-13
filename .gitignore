@@ -22,7 +22,7 @@ node_modules
 
 lib/
 client/
-test/*.test.js
+*.test.js
 /*.js
 private.json
 

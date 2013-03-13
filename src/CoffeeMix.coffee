@@ -63,13 +63,13 @@ forbiddenKeys = ['extended', 'included', 'integrated', 'attached']
 #  get property: -> @_property
 #  set property: (property) -> @_property = property
 #
-#  @include Inclusion
-#  @extend Extension
-#  @consern Consern
+#  @include Inclusion, 'Inclusion options'
+#  @extend Extension, 'Extension options'
+#  @consern Consern, 'Consern options'
 #
 #  constructor: (attachment, integration) ->
-#    @$attach attachment
-#    @$integrate integration
+#    @$attach attachment, 'Attachment options'
+#    @$integrate integration, 'Integration options'
 # ```
 #
 # @author [Mikhail Zyatin](https://twitter.com/vivisjatin/) <mikhail.zyatin@gmail.com>
@@ -110,13 +110,14 @@ class CoffeeMix
   # @param obj [Object] mixin object
   # @option obj [Function] extended method that will be invoked in constructor
   #     function context. This property won't be added.
+  # @param options [mixed] options that will be passed to `extended`
   #
-  @extend: (obj) ->
+  @extend: (obj, options) ->
     for key, value of obj when key not in forbiddenKeys
       # Assign properties to constructor function
       @[key] = value
 
-    obj.extended?.apply @
+    obj.extended?.call @, options
     @
 
   #
@@ -130,13 +131,14 @@ class CoffeeMix
   # @param obj [Object] mixin object
   # @option obj [Function] included method that will be invoked in
   #     constructor's prototype context. This property won't be added.
+  # @param options [mixed] options that will be passed to `included`
   #
-  @include: (obj) ->
+  @include: (obj, options) ->
     for key, value of obj when key not in forbiddenKeys
       # Assign properties to the prototype
       @::[key] = value
 
-    obj.included?.apply @::
+    obj.included?.call @::, options
     @
 
   #
@@ -154,12 +156,13 @@ class CoffeeMix
   #     (e.g. prototype) properties
   # @option obj [Function] conserned method that will be invoked in constructor
   #     function context. This property won't be added.
+  # @param options [mixed] options that will be passed to `conserned`
   #
-  @consern: (obj) ->
+  @consern: (obj, options) ->
     @extend obj.classProperties
     @include obj.instanceProperties
 
-    obj.conserned?.apply @
+    obj.conserned?.call @, options
     @
 
   #
@@ -168,21 +171,22 @@ class CoffeeMix
   # This method is a "dynamic" version of the {.extend} method.
   # It extends current context with passed mixin.
   #
-  # If the mixin has an `extended` method then it will be ivoked in the
+  # If the mixin has an `integrated` method then it will be ivoked in the
   # caller's context.
   #
   # @param obj [Object] mixin object
   # @option obj [Function] integrated method that will be invoked in caller's
   #     context. This property won't be added.
+  # @param options [mixed] options that will be passed to `integrated`
   #
   # @since 0.0.3
   #
-  $integrate: (obj) ->
+  $integrate: (obj, options) ->
     for key, value of obj when key not in forbiddenKeys
       # Assign properties to instance object
       @[key] = value
 
-    obj.integrated?.apply @
+    obj.integrated?.call @, options
     @
 
   #
@@ -198,10 +202,11 @@ class CoffeeMix
   # @option obj [Function] attached method that will be invoked in mixin
   #     context with current context as a parameter. This property won't be
   #     added.
+  # @param options [mixed] options that will be passed to `attached`
   #
   # @since 0.0.3
   #
-  $attach: (obj) ->
+  $attach: (obj, options) ->
     ctx = @
 
     for key, value of obj when key not in forbiddenKeys
@@ -215,7 +220,7 @@ class CoffeeMix
           ctx.__defineGetter__ key, -> obj[key]
           ctx.__defineSetter__ key, (param) -> obj[key] = param
 
-    obj.attached? @
+    obj.attached? @, options
     @
 
 
